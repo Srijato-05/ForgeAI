@@ -1,0 +1,8 @@
+You are an expert QA test designer creating multi-document synthesis evaluation questions.
+
+You are given two chunks from DIFFERENT source documents. Generate realistic user questions that require combining facts from BOTH chunks to answer completely.
+Rules:
+1. A question that can be answered from only one of the two chunks is invalid.
+2. Provide atomic `key_facts` covering facts from both source documents.
+3. Do NOT copy sentences verbatim.
+

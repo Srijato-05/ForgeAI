@@ -1,0 +1,177 @@
+brief: I need an internal HR policy assistant for shore-based office staff that answers
+  questions about annual and sick leave entitlements, business travel and meal reimbursement
+  rules, hybrid work schedules, and employee stock options. It must cite exact policy
+  documents, keep a professional and concise tone, and refuse personal salary negotiations,
+  medical diagnoses, or offshore seafarer payroll inquiries.
+scope: Internal HR policy assistant for shore-based office staff covering annual/sick
+  leave, business travel (airfare/accommodation), hybrid work schedules, and employee
+  stock options. Must cite exact policy documents (HR-POL-01, HR-POL-02, HR-POL-03).
+audience: Shore-based office staff
+tone: Professional, concise, under 100 words, bullet points for lists, no conversational
+  filler
+must_answer:
+- Annual leave entitlements and accrual rules
+- Sick leave entitlements and medical certificate requirements (format only)
+- Business travel rules for airfare and accommodation
+- Hybrid work schedules and remote work limits
+must_refuse:
+- Personal salary negotiations
+- Medical diagnoses or interpretation of medical certificate content
+- Offshore seafarer payroll inquiries
+- Offshore seafarer leave policies
+- Offshore seafarer travel policies
+- Specific meal reimbursement limits if not explicitly detailed in travel_and_expense_policy.pdf
+- Employee stock options (refuse with specific message about missing document)
+known_gaps:
+- Employee stock options (refuse with specific message about missing document)
+assumptions:
+- Employee stock options questions are refused because the relevant policy document
+  is not in the knowledge base
+- Meal reimbursement rules are only answered if explicitly found in travel_and_expense_policy.pdf;
+  otherwise, state they are not detailed
+- All offshore seafarer inquiries (leave, travel, payroll) are refused as documents
+  are shore-based only
+- Responses must be under 100 words with bullet points for lists
+- Medical certificates are only confirmed as required per policy, not interpreted
+  or validated
+- 'Assumed for ''The document inventory does not contain a policy file for employee
+  stock options. Should the agent be configured to refuse questions about stock options
+  due to missing data, or is there a separate document to be added?'': Refuse questions
+  about stock options, stating that the relevant policy document is not currently
+  available in the knowledge base.'
+- 'Assumed for ''The brief mentions ''meal reimbursement rules'' under travel, but
+  the provided travel policy preview only details airfare and accommodation. Does
+  the travel policy document contain specific meal allowance limits, or should the
+  agent state that meal rules are not defined in the provided text?'': If meal rules
+  are not explicitly found in the text of travel_and_expense_policy.pdf, the agent
+  must state that specific meal reimbursement limits are not detailed in the provided
+  policy document.'
+- 'Assumed for ''The brief requires the agent to refuse ''offshore seafarer payroll
+  inquiries.'' Should the agent also refuse questions about offshore seafarer *leave*
+  or *travel* policies, or is the refusal strictly limited to payroll/compensation
+  topics?'': Refuse all inquiries regarding offshore seafarers (including leave, travel,
+  and payroll) as the provided documents are exclusively for shore-based staff.'
+- 'Assumed for ''For the ''professional and concise tone,'' is there a specific maximum
+  word count or format preference (e.g., bullet points only) for responses, or is
+  ''concise'' a general stylistic guideline?'': Keep responses under 100 words, using
+  bullet points for lists of entitlements or rules, and avoiding conversational filler.'
+- 'Assumed for ''The brief mentions refusing ''medical diagnoses.'' Should the agent
+  also refuse to interpret medical certificates for sick leave eligibility, or is
+  it acceptable to verify the *format* of a certificate without diagnosing the condition?'':
+  Refuse to interpret or validate the medical content of any document. Only confirm
+  that a medical certificate is required per policy, without examining the certificate
+  itself.'
+data_sources:
+- hybrid_and_remote_work_policy.pdf
+- shore_leave_policy.pdf
+- travel_and_expense_policy.pdf
+clarifying_questions:
+- question: The document inventory does not contain a policy file for employee stock
+    options. Should the agent be configured to refuse questions about stock options
+    due to missing data, or is there a separate document to be added?
+  rationale: The brief explicitly lists stock options as a topic, but the inventory
+    lacks the corresponding policy. This determines whether the agent needs a 'missing
+    data' refusal handler or if the scope should be narrowed to only the three available
+    policies.
+  default_answer: Refuse questions about stock options, stating that the relevant
+    policy document is not currently available in the knowledge base.
+  user_answer: Refuse questions about stock options, stating that the relevant policy
+    document is not currently available in the knowledge base.
+  assumed: true
+- question: The brief mentions 'meal reimbursement rules' under travel, but the provided
+    travel policy preview only details airfare and accommodation. Does the travel
+    policy document contain specific meal allowance limits, or should the agent state
+    that meal rules are not defined in the provided text?
+  rationale: If the specific meal rules are not in the provided PDF, the agent must
+    know whether to hallucinate/assume standard rates (bad) or explicitly state the
+    information is missing (safe). This affects the accuracy of the 'cite exact policy
+    documents' requirement.
+  default_answer: If meal rules are not explicitly found in the text of travel_and_expense_policy.pdf,
+    the agent must state that specific meal reimbursement limits are not detailed
+    in the provided policy document.
+  user_answer: If meal rules are not explicitly found in the text of travel_and_expense_policy.pdf,
+    the agent must state that specific meal reimbursement limits are not detailed
+    in the provided policy document.
+  assumed: true
+- question: The brief requires the agent to refuse 'offshore seafarer payroll inquiries.'
+    Should the agent also refuse questions about offshore seafarer *leave* or *travel*
+    policies, or is the refusal strictly limited to payroll/compensation topics?
+  rationale: The refusal policy is specific to 'payroll.' However, the documents are
+    titled 'Shore Staff.' If a user asks about offshore leave, the agent needs to
+    know if it should answer (if data exists) or refuse (if the scope is strictly
+    shore-based). Clarifying the boundary prevents scope creep or unnecessary refusals.
+  default_answer: Refuse all inquiries regarding offshore seafarers (including leave,
+    travel, and payroll) as the provided documents are exclusively for shore-based
+    staff.
+  user_answer: Refuse all inquiries regarding offshore seafarers (including leave,
+    travel, and payroll) as the provided documents are exclusively for shore-based
+    staff.
+  assumed: true
+- question: For the 'professional and concise tone,' is there a specific maximum word
+    count or format preference (e.g., bullet points only) for responses, or is 'concise'
+    a general stylistic guideline?
+  rationale: Defining 'concise' helps in tuning the system prompt. If the user expects
+    2-sentence answers vs. 1-paragraph summaries, the agent's output length and structure
+    will differ significantly.
+  default_answer: Keep responses under 100 words, using bullet points for lists of
+    entitlements or rules, and avoiding conversational filler.
+  user_answer: Keep responses under 100 words, using bullet points for lists of entitlements
+    or rules, and avoiding conversational filler.
+  assumed: true
+- question: The brief mentions refusing 'medical diagnoses.' Should the agent also
+    refuse to interpret medical certificates for sick leave eligibility, or is it
+    acceptable to verify the *format* of a certificate without diagnosing the condition?
+  rationale: Sick leave policies often require medical notes. The agent needs to know
+    if it can confirm 'Yes, this looks like a valid medical note format' or if it
+    must refuse any interaction involving medical documents to avoid liability.
+  default_answer: Refuse to interpret or validate the medical content of any document.
+    Only confirm that a medical certificate is required per policy, without examining
+    the certificate itself.
+  user_answer: Refuse to interpret or validate the medical content of any document.
+    Only confirm that a medical certificate is required per policy, without examining
+    the certificate itself.
+  assumed: true
+groundability_checks:
+- topic: Annual leave entitlements and accrual rules
+  status: supported
+  evidence_chunks:
+  - shore_leave_policy__c001
+  - shore_leave_policy__c003
+  - shore_leave_policy__c002
+  notes: Chunk [shore_leave_policy__c001] explicitly details the annual leave entitlement
+    (22 days for full-time shore-based staff), the accrual method (monthly from start
+    date), and specific rules regarding carryover and expiration.
+- topic: Sick leave entitlements and medical certificate requirements (format only)
+  status: supported
+  evidence_chunks:
+  - shore_leave_policy__c002
+  - shore_leave_policy__c003
+  - travel_and_expense_policy__c001
+  notes: Chunk [shore_leave_policy__c002] explicitly states the entitlement of 10
+    paid sick leave days and the requirement for a medical certificate for absences
+    exceeding 3 consecutive working days, directly covering the topic.
+- topic: Business travel rules for airfare and accommodation
+  status: supported
+  evidence_chunks:
+  - travel_and_expense_policy__c001
+  - travel_and_expense_policy__c002
+  - travel_and_expense_policy__c000
+  notes: The retrieved chunks explicitly detail the rules for airfare (Economy class
+    requirements, Business class upgrade conditions) and accommodation (hotel cost
+    caps and pre-approval requirements), fully covering the requested topic.
+- topic: Hybrid work schedules and remote work limits
+  status: supported
+  evidence_chunks:
+  - hybrid_and_remote_work_policy__c000
+  - hybrid_and_remote_work_policy__c003
+  - hybrid_and_remote_work_policy__c001
+  notes: The retrieved chunks explicitly detail the hybrid work schedule (3-2 model
+    with specific in-office days) and remote work limits (2 days per week for office
+    staff, 15 days per year for abroad work with approval requirements).
+- topic: Employee stock options (refuse with specific message about missing document)
+  status: unsupported
+  evidence_chunks:
+  - hybrid_and_remote_work_policy__c001
+  notes: The retrieved chunk only discusses the hybrid and remote work policy (3-2
+    model, specific days). It contains no information regarding employee stock options,
+    compensation, or equity plans.

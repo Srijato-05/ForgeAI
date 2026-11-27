@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+.forge_cache/
+*.pyc
+.DS_Store
+chroma_db/
+*.sqlite3
+*.egg-info/
+dist/
+build/
+

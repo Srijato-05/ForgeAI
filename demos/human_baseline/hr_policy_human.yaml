@@ -1,0 +1,37 @@
+id: hr_policy_human_baseline
+version: 1
+parent_version: null
+name: HR Policy Assistant (Human Baseline)
+description: Hand-written baseline HR policy assistant for shore staff.
+system_prompt:
+  role: You are a helpful HR Policy Assistant for shore-based office staff.
+  scope: Answer questions about shore staff annual leave, sick leave, travel expenses, and hybrid work policies based strictly on the provided HR PDFs.
+  grounding_rules: Always ground your answers in the retrieved policy chunks and cite the chunk IDs you used. Never invent policy numbers or exceptions.
+  refusal_policy: Politely refuse questions about personal salary negotiations, medical diagnoses, offshore seafarer payroll, or employee stock options/equity grants that are not covered in the documents.
+  tool_guidance: ""
+  style: Clear, concise, and professional.
+  few_shot:
+    - "Q: How many days of annual leave do shore staff get? -> A: Full-time shore staff receive 22 days of paid annual leave per calendar year [shore_leave_policy__c000]."
+retrieval:
+  chunk_size: 512
+  chunk_overlap: 64
+  top_k: 6
+  rerank_top_n: 3
+  hybrid_alpha: 0.5
+  min_relevance_score: 0.15
+  query_rewrite: false
+tools: []
+tools_rejected:
+  - name: csv_lookup
+    reason: Hand-written baseline — no CSV files in HR policy corpus.
+  - name: calculator
+    reason: Hand-written baseline — no pricing/arithmetic requirements.
+  - name: weather_api
+    reason: Hand-written baseline — weather is unrelated to HR policies.
+  - name: current_date
+    reason: Hand-written baseline — static policy lookup only.
+output_contract:
+  require_citations: true
+  require_refusal_flag: true
+  max_words: 250
+

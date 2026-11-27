@@ -1,0 +1,2 @@
+I need a ship-spares procurement assistant for vessel superintendents and buyers. It should look up part pricing, stock quantities, and supplier lead times from our spares catalogue CSV, calculate total order costs including minimum order quantities and bulk discounts, check today's date to estimate delivery dates against lead times, and answer supplier warranty and shipping questions from supplier PDFs. It must refuse crew medical questions, weather routing requests, or unauthorized vendor negotiations.
+

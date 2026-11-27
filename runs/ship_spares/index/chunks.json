@@ -1,0 +1,90 @@
+[
+  {
+    "chunk_id": "nordic_marine_terms__c000",
+    "source_doc": "nordic_marine_terms.pdf",
+    "section_title": "Introduction",
+    "raw_text": "Nordic Marine Systems \u2014 Supplier Terms & Warranty Guide",
+    "contextual_text": "[Document: nordic_marine_terms.pdf | Section: Introduction]\nNordic Marine Systems \u2014 Supplier Terms & Warranty Guide",
+    "metadata": {
+      "file_type": "pdf",
+      "word_count": 9
+    }
+  },
+  {
+    "chunk_id": "nordic_marine_terms__c001",
+    "source_doc": "nordic_marine_terms.pdf",
+    "section_title": "1. OEM Warranty Coverage",
+    "raw_text": "Nordic Marine Systems (supplier prefix NM-) provides a 24-month OEM warranty on all propulsion components, hydraulic valves, and cooling water pumps from the date of vessel delivery. Warranty claims require the part serial number, vessel IMO number, and chief engineer inspection log.",
+    "contextual_text": "[Document: nordic_marine_terms.pdf | Section: 1. OEM Warranty Coverage]\nNordic Marine Systems (supplier prefix NM-) provides a 24-month OEM warranty on all propulsion components, hydraulic valves, and cooling water pumps from the date of vessel delivery. Warranty claims require the part serial number, vessel IMO number, and chief engineer inspection log.",
+    "metadata": {
+      "file_type": "pdf",
+      "word_count": 42
+    }
+  },
+  {
+    "chunk_id": "nordic_marine_terms__c002",
+    "source_doc": "nordic_marine_terms.pdf",
+    "section_title": "2. Bulk Discounts and Emergency Freight",
+    "raw_text": "Orders of 10 or more units on a single NM- SKU qualify for an automatic 8% bulk discount off the catalogue unit price. Standard deliveries ship FOB Rotterdam. Urgent vessel-in-port air freight incurs a flat emergency surcharge of USD 350 per shipment.",
+    "contextual_text": "[Document: nordic_marine_terms.pdf | Section: 2. Bulk Discounts and Emergency Freight]\nOrders of 10 or more units on a single NM- SKU qualify for an automatic 8% bulk discount off the catalogue unit price. Standard deliveries ship FOB Rotterdam. Urgent vessel-in-port air freight incurs a flat emergency surcharge of USD 350 per shipment.",
+    "metadata": {
+      "file_type": "pdf",
+      "word_count": 42
+    }
+  },
+  {
+    "chunk_id": "nordic_marine_terms__c003",
+    "source_doc": "nordic_marine_terms.pdf",
+    "section_title": "3. Invoicing and Payment Terms",
+    "raw_text": "Invoices are issued in USD or EUR at the ECB spot rate on dispatch date, with Net 30 payment terms for approved fleet accounts.",
+    "contextual_text": "[Document: nordic_marine_terms.pdf | Section: 3. Invoicing and Payment Terms]\nInvoices are issued in USD or EUR at the ECB spot rate on dispatch date, with Net 30 payment terms for approved fleet accounts.",
+    "metadata": {
+      "file_type": "pdf",
+      "word_count": 24
+    }
+  },
+  {
+    "chunk_id": "pacific_diesel_supplier_guide__c000",
+    "source_doc": "pacific_diesel_supplier_guide.pdf",
+    "section_title": "Introduction",
+    "raw_text": "Pacific Diesel Parts \u2014 Warehouse Dispatch & Returns Policy",
+    "contextual_text": "[Document: pacific_diesel_supplier_guide.pdf | Section: Introduction]\nPacific Diesel Parts \u2014 Warehouse Dispatch & Returns Policy",
+    "metadata": {
+      "file_type": "pdf",
+      "word_count": 9
+    }
+  },
+  {
+    "chunk_id": "pacific_diesel_supplier_guide__c001",
+    "source_doc": "pacific_diesel_supplier_guide.pdf",
+    "section_title": "1. Warranty and Dispatch SLA",
+    "raw_text": "Pacific Diesel Parts (supplier prefix PD-) provides an 18-month warranty on valves, filters, piston rings, and gasket kits. In-stock items at the Singapore central warehouse are dispatched within 48 hours of purchase order confirmation.",
+    "contextual_text": "[Document: pacific_diesel_supplier_guide.pdf | Section: 1. Warranty and Dispatch SLA]\nPacific Diesel Parts (supplier prefix PD-) provides an 18-month warranty on valves, filters, piston rings, and gasket kits. In-stock items at the Singapore central warehouse are dispatched within 48 hours of purchase order confirmation.",
+    "metadata": {
+      "file_type": "pdf",
+      "word_count": 34
+    }
+  },
+  {
+    "chunk_id": "pacific_diesel_supplier_guide__c002",
+    "source_doc": "pacific_diesel_supplier_guide.pdf",
+    "section_title": "2. Order-Level Volume Discount",
+    "raw_text": "Purchase orders placed with Pacific Diesel Parts totaling more than USD 2,500 receive a 5% order-level discount prior to freight charges.",
+    "contextual_text": "[Document: pacific_diesel_supplier_guide.pdf | Section: 2. Order-Level Volume Discount]\nPurchase orders placed with Pacific Diesel Parts totaling more than USD 2,500 receive a 5% order-level discount prior to freight charges.",
+    "metadata": {
+      "file_type": "pdf",
+      "word_count": 21
+    }
+  },
+  {
+    "chunk_id": "pacific_diesel_supplier_guide__c003",
+    "source_doc": "pacific_diesel_supplier_guide.pdf",
+    "section_title": "3. Returns and Restocking Fee",
+    "raw_text": "Unused, unopened non-defective spares may be returned within 30 calendar days of delivery subject to a 15% restocking fee. Custom-machined items are non-returnable.",
+    "contextual_text": "[Document: pacific_diesel_supplier_guide.pdf | Section: 3. Returns and Restocking Fee]\nUnused, unopened non-defective spares may be returned within 30 calendar days of delivery subject to a 15% restocking fee. Custom-machined items are non-returnable.",
+    "metadata": {
+      "file_type": "pdf",
+      "word_count": 23
+    }
+  }
+]

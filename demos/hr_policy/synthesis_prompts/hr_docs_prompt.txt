@@ -1,0 +1,7 @@
+Synthesize three distinct, well-structured corporate HR policy PDFs for shore-based maritime office staff:
+1. `shore_leave_policy.pdf` — Annual leave (22 days), carryover limit (5 days until March 31), sick leave (10 paid days, medical certificate after 3 consecutive days), parental leave (16 weeks primary / 4 weeks secondary), and bereavement leave (5 days).
+2. `travel_and_expense_policy.pdf` — Economy airfare under 6 hours, business class only over 8 hours with VP approval, hotel cap USD 220/night, daily meal per diem USD 65/day, receipt requirement over USD 25, and 14-day reimbursement submission deadline.
+3. `hybrid_and_remote_work_policy.pdf` — Core in-office days (Tuesday–Thursday), max 2 remote days per week, home-office equipment stipend USD 600 every 24 months, and international remote work cap of 15 business days/year with manager + HR approval.
+
+Deliberately omit any mention of employee stock options or equity grants across all three PDFs so ForgeAI's Groundability Guard detects and flags the unsupported gap from the brief.
+

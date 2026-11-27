@@ -1,0 +1,5 @@
+Synthesize a realistic ship-spares dataset comprising one CSV parts catalogue and two supplier terms PDFs:
+1. `spares_catalogue.csv` — 16 marine spare parts across propulsion, pumps, valves, seals, and filtration, with columns: `part_no,name,category,supplier,unit_price_usd,stock_qty,lead_time_days,moq`.
+2. `nordic_marine_terms.pdf` — Nordic Marine Systems supplier terms: 24-month warranty on OEM propulsion & pump spares, 8% bulk discount for orders of 10+ units on a single SKU, FOB Rotterdam Incoterms, EUR/USD invoicing rules, and emergency air-freight surcharge of USD 350.
+3. `pacific_diesel_supplier_guide.pdf` — Pacific Diesel Parts supplier guide: 18-month warranty on valves and gasket kits, 5% discount on orders totaling over USD 2,500, Singapore warehouse dispatch within 48 hours for in-stock items, and 15% restocking fee on non-defective returns within 30 days.
+

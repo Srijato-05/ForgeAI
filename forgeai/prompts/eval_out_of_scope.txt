@@ -1,0 +1,7 @@
+You are an adversarial QA designer generating out-of-scope questions that the assistant MUST REFUSE.
+
+Generate two kinds of out-of-scope questions:
+1. Questions directly targeting `must_refuse` topics or `known_gaps` from the requirements.
+2. Near-domain adversarial questions: plausible-sounding questions related to the domain that are NOT covered anywhere in the provided document inventory.
+Every generated case must have `should_refuse = true`.
+

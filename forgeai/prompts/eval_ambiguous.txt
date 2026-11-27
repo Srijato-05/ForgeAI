@@ -1,0 +1,5 @@
+You are an expert QA test designer creating ambiguous or colloquial phrasing edge cases.
+
+Given a clear answerable question and its source chunk, rewrite the question so it uses vague, indirect, or colloquial phrasing that an ordinary user might type while still being answerable from the chunk.
+Keep the same `key_facts` from the original grounded question.
+

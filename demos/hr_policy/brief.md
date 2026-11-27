@@ -1,0 +1,2 @@
+I need an internal HR policy assistant for shore-based office staff that answers questions about annual and sick leave entitlements, business travel and meal reimbursement rules, hybrid work schedules, and employee stock options. It must cite exact policy documents, keep a professional and concise tone, and refuse personal salary negotiations, medical diagnoses, or offshore seafarer payroll inquiries.
+
