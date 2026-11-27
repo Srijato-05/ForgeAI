@@ -144,17 +144,27 @@ def test_gateway_tool_use_failed_recovery(tmp_path: Path) -> None:
             }
         }
 
-    class _FakeCompletions:
-        def create(self, **kwargs):
-            raise _ToolUse400("tool_use_failed")
+    class _ToolUse400Flat(Exception):
+        status_code = 400
+        body = {
+            "message": "Tool choice is none, but model called a tool",
+            "code": "tool_use_failed",
+            "failed_generation": '{"name": "calculator", "arguments": {"expression": "3 * 240"}}',
+        }
 
-    client = SimpleNamespace(chat=SimpleNamespace(completions=_FakeCompletions()))
+    class _FakeCompletions:
+        def __init__(self, exc):
+            self.exc = exc
+
+        def create(self, **kwargs):
+            raise self.exc
+
     settings = ForgeSettings(cache_dir=tmp_path / "cache", forge_provider="ollama")
     gw = LLMGateway(
         settings=settings,
         cache=DiskCache(tmp_path / "cache"),
         rate_limiter=RateLimiter(0, 0),
-        client_factory=lambda *_: client,
+        client_factory=lambda *_: SimpleNamespace(chat=SimpleNamespace(completions=_FakeCompletions(_ToolUse400("tool_use_failed")))),
     )
     res = gw.complete("agent", [{"role": "user", "content": "Check NM-101"}], json_mode=True, node="agent_runtime")
     payload = json.loads(res.content)
@@ -163,4 +173,13 @@ def test_gateway_tool_use_failed_recovery(tmp_path: Path) -> None:
         "arguments": {"filename": "spares.csv", "query_value": "NM-101"},
     }
     assert payload["final_answer"] is None
+
+    gw_flat = LLMGateway(
+        settings=settings,
+        cache=DiskCache(tmp_path / "cache2"),
+        rate_limiter=RateLimiter(0, 0),
+        client_factory=lambda *_: SimpleNamespace(chat=SimpleNamespace(completions=_FakeCompletions(_ToolUse400Flat("tool_use_failed")))),
+    )
+    res_flat = gw_flat.complete("agent", [{"role": "user", "content": "Calc"}], json_mode=True, node="agent_runtime")
+    assert json.loads(res_flat.content)["tool_call"] == {"name": "calculator", "arguments": {"expression": "3 * 240"}}
 

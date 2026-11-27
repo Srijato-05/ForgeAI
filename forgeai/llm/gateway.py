@@ -49,8 +49,8 @@ def _recover_tool_use_failed(exc: Exception) -> str | None:
     body = getattr(exc, "body", None)
     if not isinstance(body, dict):
         return None
-    err = body.get("error")
-    if not isinstance(err, dict) or err.get("code") != "tool_use_failed":
+    err = body.get("error") if isinstance(body.get("error"), dict) else body
+    if err.get("code") != "tool_use_failed":
         return None
     raw = err.get("failed_generation")
     if not isinstance(raw, str):
