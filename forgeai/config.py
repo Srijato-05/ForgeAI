@@ -75,6 +75,7 @@ class ForgeSettings(BaseSettings):
     runs_dir: Path = Field(default=Path("runs"))
     rpm_limit: int = Field(default=25)
     tpm_limit: int = Field(default=10_000)
+    max_output_tokens: int = Field(default=900)
     budget: BudgetConfig = Field(default_factory=BudgetConfig)
 
     def get_base_url(self, provider: ProviderName | None = None) -> str:

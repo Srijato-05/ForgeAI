@@ -171,6 +171,8 @@ class LLMGateway:
             "messages": messages,
             "temperature": temperature,
         }
+        if self.settings.max_output_tokens > 0:
+            kwargs["max_tokens"] = self.settings.max_output_tokens
         if json_mode:
             kwargs["response_format"] = {"type": "json_object"}
 
@@ -255,6 +257,10 @@ class LLMGateway:
                     kwargs.pop("response_format", None)
                     if attempt + 1 < self.max_attempts:
                         continue
+                if getattr(exc, "status_code", None) == 429:
+                    msg = str(exc).lower()
+                    if "otpm" in msg or "reduce max_tokens" in msg:
+                        kwargs["max_tokens"] = max(400, min(int(kwargs.get("max_tokens", 900)), 750) - 100)
                 if attempt + 1 >= self.max_attempts or not _is_retryable_error(exc):
                     raise
                 time.sleep(self.base_backoff_seconds * (2**attempt))
