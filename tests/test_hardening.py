@@ -130,3 +130,37 @@ def test_gateway_json_mode_400_fallback(tmp_path: Path) -> None:
     assert "response_format" in calls[0]
     assert "response_format" not in calls[1]
 
+
+def test_gateway_tool_use_failed_recovery(tmp_path: Path) -> None:
+    import json
+
+    class _ToolUse400(Exception):
+        status_code = 400
+        body = {
+            "error": {
+                "message": "Tool choice is none, but model called a tool",
+                "code": "tool_use_failed",
+                "failed_generation": '{"name": "csv_lookup", "arguments": {"filename": "spares.csv", "query_value": "NM-101"}}',
+            }
+        }
+
+    class _FakeCompletions:
+        def create(self, **kwargs):
+            raise _ToolUse400("tool_use_failed")
+
+    client = SimpleNamespace(chat=SimpleNamespace(completions=_FakeCompletions()))
+    settings = ForgeSettings(cache_dir=tmp_path / "cache", forge_provider="ollama")
+    gw = LLMGateway(
+        settings=settings,
+        cache=DiskCache(tmp_path / "cache"),
+        rate_limiter=RateLimiter(0, 0),
+        client_factory=lambda *_: client,
+    )
+    res = gw.complete("agent", [{"role": "user", "content": "Check NM-101"}], json_mode=True, node="agent_runtime")
+    payload = json.loads(res.content)
+    assert payload["tool_call"] == {
+        "name": "csv_lookup",
+        "arguments": {"filename": "spares.csv", "query_value": "NM-101"},
+    }
+    assert payload["final_answer"] is None
+

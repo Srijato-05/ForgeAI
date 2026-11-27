@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import time
 from typing import Any, Callable
 
@@ -39,6 +40,48 @@ def _is_retryable_error(exc: Exception) -> bool:
     if isinstance(status, int):
         return status == 429 or status >= 500
     return False
+
+
+def _recover_tool_use_failed(exc: Exception) -> str | None:
+    """Wrap Groq's 400 tool_use_failed `failed_generation` into _AgentStepOutput JSON."""
+    if getattr(exc, "status_code", None) != 400:
+        return None
+    body = getattr(exc, "body", None)
+    if not isinstance(body, dict):
+        return None
+    err = body.get("error")
+    if not isinstance(err, dict) or err.get("code") != "tool_use_failed":
+        return None
+    raw = err.get("failed_generation")
+    if not isinstance(raw, str):
+        return None
+    start, end = raw.find("{"), raw.rfind("}")
+    if start == -1 or end <= start:
+        return None
+    try:
+        parsed = json.loads(raw[start : end + 1])
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(parsed, dict) or "name" not in parsed:
+        return None
+    args = parsed.get("arguments")
+    if isinstance(args, str):
+        try:
+            args = json.loads(args)
+        except json.JSONDecodeError:
+            args = {}
+    if not isinstance(args, dict):
+        args = {}
+    return json.dumps(
+        {
+            "thought": "Invoking tool.",
+            "tool_call": {"name": str(parsed["name"]), "arguments": args},
+            "final_answer": None,
+            "citations": [],
+            "refused": False,
+            "refusal_reason": None,
+        }
+    )
 
 
 class LLMGateway:
@@ -182,6 +225,32 @@ class LLMGateway:
                 )
             except Exception as exc:
                 last_exc = exc
+                recovered = _recover_tool_use_failed(exc)
+                if recovered is not None:
+                    latency_ms = (time.perf_counter() - t0) * 1000.0
+                    if self.tracer is not None:
+                        self.tracer.log(
+                            TraceEntry(
+                                node=node,
+                                role=role,
+                                provider=target_provider,
+                                model=model,
+                                prompt_hash=cache_key,
+                                tokens_in=0,
+                                tokens_out=0,
+                                latency_ms=latency_ms,
+                                cached=False,
+                            )
+                        )
+                    return LLMResult(
+                        content=recovered,
+                        model=model,
+                        provider=target_provider,
+                        tokens_in=0,
+                        tokens_out=0,
+                        latency_ms=latency_ms,
+                        cached=False,
+                    )
                 if "response_format" in kwargs and getattr(exc, "status_code", None) == 400:
                     kwargs.pop("response_format", None)
                     if attempt + 1 < self.max_attempts:
