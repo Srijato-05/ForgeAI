@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 from rapidfuzz import fuzz
 
 from forgeai.ingest import Chunk, DocumentInventory, HybridRetriever
-from forgeai.llm import LLMGateway, call_structured
+from forgeai.llm import LLMGateway, StructuredOutputError, call_structured
 from forgeai.prompts import load_prompt
 from forgeai.schemas import EvalCase, EvalCategory, RequirementsDoc, RetrievalConfig
 from forgeai.tools import ToolRegistry
@@ -182,23 +182,26 @@ def generate_eval_set(
             d2 = doc_names[(pair_i + 1) % len(doc_names)]
             c1 = rng.choice(by_doc[d1])
             c2 = rng.choice(by_doc[d2])
-            batch = call_structured(
-                gateway,
-                role="factory",
-                messages=[
-                    {"role": "system", "content": multi_prompt},
-                    {
-                        "role": "user",
-                        "content": (
-                            f"Chunk A [{c1.chunk_id}] ({c1.source_doc}):\n{c1.raw_text}\n\n"
-                            f"Chunk B [{c2.chunk_id}] ({c2.source_doc}):\n{c2.raw_text}\n\n"
-                            "Generate 1 multi-doc synthesis question."
-                        ),
-                    },
-                ],
-                schema=_GeneratedQuestionBatch,
-                node="evalgen_multi_doc",
-            )
+            try:
+                batch = call_structured(
+                    gateway,
+                    role="factory",
+                    messages=[
+                        {"role": "system", "content": multi_prompt},
+                        {
+                            "role": "user",
+                            "content": (
+                                f"Chunk A [{c1.chunk_id}] ({c1.source_doc}):\n{c1.raw_text}\n\n"
+                                f"Chunk B [{c2.chunk_id}] ({c2.source_doc}):\n{c2.raw_text}\n\n"
+                                "Generate 1 multi-doc synthesis question."
+                            ),
+                        },
+                    ],
+                    schema=_GeneratedQuestionBatch,
+                    node="evalgen_multi_doc",
+                )
+            except StructuredOutputError:
+                continue
             for item in batch.cases[:1]:
                 candidates.append(
                     EvalCase(
@@ -217,24 +220,27 @@ def generate_eval_set(
     # 3. Ambiguous / colloquial phrasing edge cases
     ambig_prompt = load_prompt("eval_ambiguous")
     for parent_case, parent_chunk in single_parents[: max(2, target_size // 8)]:
-        batch = call_structured(
-            gateway,
-            role="factory",
-            messages=[
-                {"role": "system", "content": ambig_prompt},
-                {
-                    "role": "user",
-                    "content": (
-                        f"Original Question: {parent_case.question}\n"
-                        f"Key Facts: {parent_case.key_facts}\n"
-                        f"Source Chunk: {parent_chunk.raw_text}\n\n"
-                        "Generate 1 colloquial or ambiguously phrased version."
-                    ),
-                },
-            ],
-            schema=_GeneratedQuestionBatch,
-            node="evalgen_ambiguous",
-        )
+        try:
+            batch = call_structured(
+                gateway,
+                role="factory",
+                messages=[
+                    {"role": "system", "content": ambig_prompt},
+                    {
+                        "role": "user",
+                        "content": (
+                            f"Original Question: {parent_case.question}\n"
+                            f"Key Facts: {parent_case.key_facts}\n"
+                            f"Source Chunk: {parent_chunk.raw_text}\n\n"
+                            "Generate 1 colloquial or ambiguously phrased version."
+                        ),
+                    },
+                ],
+                schema=_GeneratedQuestionBatch,
+                node="evalgen_ambiguous",
+            )
+        except StructuredOutputError:
+            continue
         for item in batch.cases[:1]:
             candidates.append(
                 EvalCase(

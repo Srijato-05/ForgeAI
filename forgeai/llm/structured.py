@@ -34,6 +34,19 @@ def _strip_code_fences(raw: str) -> str:
     return text
 
 
+def _unwrap_defs(obj: Any, def_names: set[str]) -> Any:
+    """Unwrap single-key `$defs` wrapper dicts sometimes emitted by 3B models."""
+    if isinstance(obj, list):
+        return [_unwrap_defs(item, def_names) for item in obj]
+    if isinstance(obj, dict):
+        if len(obj) == 1:
+            sole_key = next(iter(obj))
+            if sole_key in def_names and isinstance(obj[sole_key], dict):
+                return _unwrap_defs(obj[sole_key], def_names)
+        return {k: _unwrap_defs(v, def_names) for k, v in obj.items()}
+    return obj
+
+
 def call_structured(
     gateway: LLMGateway,
     role: ModelRole,
@@ -44,7 +57,9 @@ def call_structured(
     node: str = "",
 ) -> T:
     """Call the LLM and parse/validate output into ``schema``, repairing on errors."""
-    schema_json = json.dumps(schema.model_json_schema(), ensure_ascii=False)
+    raw_schema = schema.model_json_schema()
+    def_names = set(raw_schema.get("$defs", {}).keys()) | {schema.__name__}
+    schema_json = json.dumps(raw_schema, ensure_ascii=False)
     schema_instruction = (
         "Respond ONLY with a single valid JSON object matching this JSON Schema. "
         "Do not include markdown or extra commentary.\n"
@@ -69,7 +84,9 @@ def call_structured(
         )
         cleaned = _strip_code_fences(result.content)
         try:
-            return schema.model_validate_json(cleaned)
+            parsed = json.loads(cleaned)
+            unwrapped = _unwrap_defs(parsed, def_names)
+            return schema.model_validate(unwrapped)
         except (ValidationError, json.JSONDecodeError) as exc:
             last_error = str(exc)
             working_messages.append({"role": "assistant", "content": result.content})
