@@ -4,8 +4,13 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
+import sys
 
 import streamlit as st
+
+_ROOT = str(Path(__file__).resolve().parent.parent)
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
 
 from forgeai.config import ForgeSettings, ProviderName
 from forgeai.factory import build_factory_graph
